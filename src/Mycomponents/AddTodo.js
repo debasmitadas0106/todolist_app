@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 export const AddTodo = ({ addTodo }) => {
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
+    const [alarm, setAlarm] = useState("");
 
 
     const submit = (e) => {
@@ -11,9 +12,10 @@ export const AddTodo = ({ addTodo }) => {
             alert("Title or Description cannot be blank");
         }
         else {
-            addTodo(title, desc);
+            addTodo(title, desc, alarm);
             setTitle("");
             setDesc("");
+            setAlarm("");
         }
     }
     return (
@@ -29,8 +31,20 @@ export const AddTodo = ({ addTodo }) => {
                     <label htmlFor="desc" className="form-label">Todo Description</label>
                     <input type="text" value={desc} onChange={(e) => setDesc(e.target.value)} className="form-control" id="desc" />
                 </div>
+                <div className="mb-3">
+                    <label htmlFor="alarm" className="form-label">
+                        Set Alarm:
+                    </label>
+                    <input
+                        type="datetime-local"
+                        className="form-control"
+                        id="alarm"
+                        value={alarm}
+                        onChange={(e) => setAlarm(e.target.value)}
+                    />
+                </div>
                 <button type="submit" className="btn btn-sm btn-success">Add Todo</button>
             </form>
         </div>
-    )
-}
+    );
+};

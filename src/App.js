@@ -34,7 +34,7 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }
 
-  const addTodo = (title, desc) => {
+  const addTodo = (title, desc, alarm) => {
     console.log("I am adding this todo", title, desc)
     let sno;
     if (todos.length === 0) {
@@ -47,15 +47,41 @@ function App() {
       sno: sno,
       title: title,
       desc: desc,
+      alarm: alarm, // Initializing alarm 
     }
     setTodos([...todos, myTodo]);
     console.log(myTodo);
   }
 
+
   const [todos, setTodos] = useState(initTodo);
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos])
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      // Check if the alarm time is reached
+      todos.forEach((todo) => {
+        if (todo.alarm && new Date(todo.alarm).getTime() <= Date.now()) {
+          // Trigger a notification
+          new Notification(`Todo Alarm: ${todo.title}`, {
+            body: todo.desc,
+          });
+
+          // Remove the alarm after triggering the notification
+          setTodos((prevTodos) =>
+            prevTodos.map((t) => (t.sno === todo.sno ? { ...t, alarm: null } : t))
+          );
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, [todos]);
+  useEffect(() => {
+    Notification.requestPermission();
+  }, []);
+
 
   return (
     <Router>
