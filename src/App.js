@@ -4,6 +4,7 @@ import { Todos } from "./Mycomponents/Todos";
 import { Footer } from "./Mycomponents/Footer";
 import { AddTodo } from "./Mycomponents/AddTodo";
 import { About } from "./Mycomponents/About";
+// import { EditTodo } from "./Mycomponents/EditTodo";
 import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
@@ -23,9 +24,7 @@ function App() {
 
   const onDelete = (todo) => {
     console.log("I am ondelete of todo", todo);
-    // Deleting this way in react does not work
-    // let index = todos.indexOf(todo);
-    // todos.splice(index, 1);
+
 
     setTodos(todos.filter((e) => {
       return e !== todo;
@@ -33,9 +32,10 @@ function App() {
     console.log("deleted", todos)
     localStorage.setItem("todos", JSON.stringify(todos));
   }
-
-  const addTodo = (title, desc, alarm) => {
-    console.log("I am adding this todo", title, desc)
+  const addTodo = (title, date) => {
+    // const date = new Date();
+    // const formattedDate = new Date().toLocaleDateString();
+    console.log("I am adding this todo", title, date)
     let sno;
     if (todos.length === 0) {
       sno = 0;
@@ -43,47 +43,28 @@ function App() {
     else {
       sno = todos[todos.length - 1].sno + 1;
     }
+
     const myTodo = {
       sno: sno,
       title: title,
-      desc: desc,
-      alarm: alarm, // Initializing alarm 
+      date: date,
+
     }
     setTodos([...todos, myTodo]);
     console.log(myTodo);
   }
 
 
+
+
   const [todos, setTodos] = useState(initTodo);
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos])
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      // Check if the alarm time is reached
-      todos.forEach((todo) => {
-        if (todo.alarm && new Date(todo.alarm).getTime() <= Date.now()) {
-          // Trigger a notification
-          new Notification(`Todo Alarm: ${todo.title}`, {
-            body: todo.desc,
-          });
-
-          // Remove the alarm after triggering the notification
-          setTodos((prevTodos) =>
-            prevTodos.map((t) => (t.sno === todo.sno ? { ...t, alarm: null } : t))
-          );
-        }
-      });
-    }, 1000);
-
-    return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, [todos]);
-  useEffect(() => {
-    Notification.requestPermission();
-  }, []);
 
 
   return (
+    <div style={{ background: '#d9d2e9', minHeight: '100vh', padding: '20px' }}>
     <Router>
       <Header title="My Todos List" searchBar={false} />
       <Routes>
@@ -100,6 +81,7 @@ function App() {
       </Routes>
       <Footer />
     </Router>
+    </div>
   );
 }
 

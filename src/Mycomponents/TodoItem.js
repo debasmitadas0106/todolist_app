@@ -1,31 +1,26 @@
 import React from 'react'
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faCheckCircle);
 
 export const TodoItem = ({ todo, onDelete }) => {
-    // const todo = Array.isArray(todo) ? todo : [];
+
     return (
         <div>
 
             <div key={todo.sno}>
-                <h3>{todo.title}</h3>
-                <p>{todo.desc}</p>
-                {todo.alarm && (
-                    <p>Alarm set for: {formatAlarm(todo.alarm)}</p>
-                )}
-                <button onClick={() => onDelete(todo) } className="btn btn-danger">Delete</button>
+                <span>
+                    {/* <i class="fa-regular fa-circle-check" style="color: #1d285d;"></i> */}
+                    <FontAwesomeIcon icon={faCheckCircle} style={{ marginRight: '8px', cursor:'pointer', color: '#1d285d' }}
+                        onClick={() => onDelete(todo)}  />
+                    {todo.title}
+
+                </span>
             </div>
         </div>
     );
-}
-const formatAlarm = (alarm) => {
-    const formattedAlarm = new Intl.DateTimeFormat('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        timeZoneName: 'short',
-    }).format(new Date(alarm));
-
-    return formattedAlarm;
 }
